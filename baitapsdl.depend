@@ -1,0 +1,72 @@
+# depslib dependency file v1.0
+1742921320 source:f:\pling\baitapsdl\main.cpp
+	<iostream>
+	<SDL.h>
+	<SDL_image.h>
+	<vector>
+	<cstdlib>
+	<ctime>
+	<algorithm>
+	<cmath>
+	<SDL_ttf.h>
+	"constants.h"
+	"utils.h"
+	"sdl_helper.h"
+	"structs.h"
+	"game.h"
+	"collision.h"
+
+1742921110 source:f:\pling\baitapsdl\game.cpp
+	"game.h"
+	"constants.h"
+	<cstdlib>
+
+1742916373 f:\pling\baitapsdl\game.h
+	<SDL.h>
+	<vector>
+	"structs.h"
+
+1742921637 f:\pling\baitapsdl\structs.h
+	<SDL.h>
+	<SDL_image.h>
+	<vector>
+	<cmath>
+	<SDL_ttf.h>
+	"constants.h"
+
+1742838632 f:\pling\baitapsdl\constants.h
+	<SDL.h>
+
+1742921095 source:f:\pling\baitapsdl\structs.cpp
+	"structs.h"
+	<algorithm>
+	"sdl_helper.h"
+
+1742837052 f:\pling\baitapsdl\sdl_helper.h
+	<SDL.h>
+	<SDL_image.h>
+
+1742837017 source:f:\pling\baitapsdl\utils.cpp
+	"utils.h"
+	"constants.h"
+
+1742836975 f:\pling\baitapsdl\utils.h
+	<iostream>
+	<fstream>
+	<SDL.h>
+
+1742837333 source:f:\pling\baitapsdl\collision.cpp
+	"collision.h"
+	<algorithm>
+
+1742837206 f:\pling\baitapsdl\collision.h
+	<SDL.h>
+
+1742837777 source:f:\pling\baitapsdl\sdl_helper.cpp
+	"sdl_helper.h"
+	"constants.h"
+	"utils.h"
+
+1742838568 source:f:\pling\baitapsdl\constants.cpp
+	"constants.h"
+
