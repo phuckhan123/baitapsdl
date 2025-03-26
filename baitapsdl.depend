@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1742921320 source:f:\pling\baitapsdl\main.cpp
+1743010844 source:f:\pling\baitapsdl\main.cpp
 	<iostream>
 	<SDL.h>
 	<SDL_image.h>
@@ -9,6 +9,7 @@
 	<algorithm>
 	<cmath>
 	<SDL_ttf.h>
+	<random>
 	"constants.h"
 	"utils.h"
 	"sdl_helper.h"
@@ -16,17 +17,17 @@
 	"game.h"
 	"collision.h"
 
-1742921110 source:f:\pling\baitapsdl\game.cpp
+1743010384 source:f:\pling\baitapsdl\game.cpp
 	"game.h"
 	"constants.h"
 	<cstdlib>
 
-1742916373 f:\pling\baitapsdl\game.h
+1743010533 f:\pling\baitapsdl\game.h
 	<SDL.h>
 	<vector>
 	"structs.h"
 
-1742921637 f:\pling\baitapsdl\structs.h
+1743011835 f:\pling\baitapsdl\structs.h
 	<SDL.h>
 	<SDL_image.h>
 	<vector>
@@ -37,20 +38,22 @@
 1742838632 f:\pling\baitapsdl\constants.h
 	<SDL.h>
 
-1742921095 source:f:\pling\baitapsdl\structs.cpp
+1743011835 source:f:\pling\baitapsdl\structs.cpp
 	"structs.h"
 	<algorithm>
 	"sdl_helper.h"
+	<string>
 
 1742837052 f:\pling\baitapsdl\sdl_helper.h
 	<SDL.h>
 	<SDL_image.h>
 
-1742837017 source:f:\pling\baitapsdl\utils.cpp
+1742984634 source:f:\pling\baitapsdl\utils.cpp
 	"utils.h"
 	"constants.h"
+	<fstream>
 
-1742836975 f:\pling\baitapsdl\utils.h
+1742984634 f:\pling\baitapsdl\utils.h
 	<iostream>
 	<fstream>
 	<SDL.h>
@@ -67,6 +70,6 @@
 	"constants.h"
 	"utils.h"
 
-1742838568 source:f:\pling\baitapsdl\constants.cpp
+1742980281 source:f:\pling\baitapsdl\constants.cpp
 	"constants.h"
 

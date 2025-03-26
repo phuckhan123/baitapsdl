@@ -7,7 +7,7 @@
 #include <algorithm>
 #include <cmath>
 #include <SDL_ttf.h>
-
+#include <random>
 #include "constants.h"
 #include "utils.h"
 #include "sdl_helper.h"
@@ -36,6 +36,31 @@ int main(int argc, char* argv[]) {
     const int distanceBetween = 300;
     vector<int> obstacleXPositions;
     int lastX = SCREEN_WIDTH;
+
+    // Khởi tạo random number generator
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<> heightVariation(-15, 15); // Điều chỉnh chiều cao từ -15 đến 15 (giảm phạm vi)
+    int minBottomHeight = 50; // Chiều cao tối thiểu cho ống dưới
+    std::uniform_int_distribution<> coinPosition(50, SCREEN_HEIGHT - 50);
+
+     // Load texture cho coin
+    SDL_Texture* coinTexture = graphics.loadTexture("coin.png");
+    // Số coin hiện tại và total
+    int currentRunCoins = 0;
+    int globalCoins = loadGlobalCoins();
+
+    // Khởi tạo coin
+    vector<Coin> coinsVector;
+    for (int i = 0; i < 10; i++)
+    {
+        Coin coin;
+        coin.rect.x = 1500 + i * 300;
+        coin.rect.y = coinPosition(gen);
+        coin.rect.w = 30;
+        coin.rect.h = 30;
+        coinsVector.push_back(coin);
+    }
     // Khởi tạo chướng ngại vật ban đầu
     for (int i = 0; i < numObstacles; i++) {
         int height = minHeight + rand() % (maxHeight - minHeight);
@@ -68,35 +93,88 @@ int main(int argc, char* argv[]) {
             // Xử lý sự kiện nhấn phím
             if (e.type == SDL_KEYDOWN) {
                 // Nhảy khi đang chơi
-                if (e.key.keysym.sym == SDLK_UP && gameState == GameState::PLAYING) {
+                if ((e.key.keysym.sym == SDLK_UP || e.key.keysym.sym == SDLK_SPACE) && gameState == GameState::PLAYING) {
                     Bird.velocity = Bird.jumpPower;
                 }
                 // Reset game khi ở trạng thái GAME_OVER và nhấn phím space
-                if (e.key.keysym.sym == SDLK_SPACE && gameState == GameState::GAME_OVER) {
-                    gameState = GameState::PLAYING;
-                    resetGame(Bird, obstacles, score);
-                }
+                     if (e.key.keysym.sym == SDLK_SPACE && gameState == GameState::GAME_OVER) {
+                          gameState = GameState::PLAYING;
+                          resetGame(Bird, obstacles, score,currentRunCoins);
+                 }
             }
         }
 
         // Cập nhật game chỉ khi ở trạng thái PLAYING
         if (gameState == GameState::PLAYING) {
             bird.tick();
-            currentObstacleSpeed = obstacleBaseSpeed + 1*(score / 10);
-            currentBackgroundScrollSpeed = backgroundBaseScrollSpeed + 1*(score / 10);
+            currentObstacleSpeed = obstacleBaseSpeed + 1 * (score / 10);
+            currentBackgroundScrollSpeed = backgroundBaseScrollSpeed + 1 * (score / 10);
             background.scroll(currentBackgroundScrollSpeed); // Cập nhật tốc độ cuộn
 
             Bird.updateBird();
+
+            //Kiểm tra và tạo coin
+            for (size_t i = 0; i < coinsVector.size(); i++) {
+                coinsVector[i].speed = currentObstacleSpeed;
+                coinsVector[i].move();
+            }
+            //Tái tạo coin khi coin đi hết màn hình
+             for (size_t i = 0; i < coinsVector.size(); i++)
+            {
+                 if (coinsVector[i].rect.x + coinsVector[i].rect.w < 0) {
+                    coinsVector[i].rect.x = 1500 + 1*300;
+                    coinsVector[i].rect.y = coinPosition(gen);
+                    coinsVector[i].collected = false;
+                }
+            }
+
+           //Kiểm tra va chạm coin
+           for (size_t i = 0; i < coinsVector.size(); i++)
+            {
+                SDL_Rect coinRect = coinsVector[i].rect;
+                SDL_Rect birdRect = { Bird.x, Bird.y, 92, 84 };
+                if (!coinsVector[i].collected && SDL_HasIntersection(&birdRect, &coinRect)) {
+                    currentRunCoins++;
+                    globalCoins++;
+                    coinsVector[i].collected = true;
+                }
+            }
 
             // Di chuyển và tái tạo chướng ngại vật
             bool moveObstaclesVertically = (score >= 10);
 
             // Di chuyển và tái tạo chướng ngại vật
-           for (size_t i = 0; i < obstacles.size(); i += 2) {
+            for (size_t i = 0; i < obstacles.size(); i += 2) {
                 obstacles[i].speed = currentObstacleSpeed;
                 obstacles[i + 1].speed = currentObstacleSpeed;
                 obstacles[i].move();
                 obstacles[i + 1].move();
+                //Thay đổi chiều cao của chướng ngại vật
+                if ( (score>=30 and score<= 40) or ( score >=  70 and score <= 80 )) {
+                   int variation = heightVariation(gen); // Lấy giá trị ngẫu nhiên
+
+                        // Thay đổi chiều cao của cả hai ống sao cho tổng chiều cao không đổi
+                         obstacles[i].rect.h += variation;
+                        obstacles[i + 1].rect.h -= variation;
+
+                        //Giữ cố định phần dưới
+                        obstacles[i+1].rect.y = obstacles[i].rect.h + gapSize;
+                        // Giới hạn chiều cao của ống trên và ống dưới
+                        if (obstacles[i].rect.h < minHeight) {
+                            obstacles[i].rect.h = minHeight;
+                           obstacles[i+1].rect.h =SCREEN_HEIGHT-obstacles[i].rect.h - gapSize;
+                        }
+                        if (obstacles[i].rect.h > maxHeight) {
+                            obstacles[i].rect.h = maxHeight;
+                             obstacles[i+1].rect.h =SCREEN_HEIGHT-obstacles[i].rect.h - gapSize;
+
+                        }
+                        if (obstacles[i+1].rect.h < minBottomHeight)
+                        {
+                            obstacles[i+1].rect.h = minBottomHeight;
+                            obstacles[i].rect.h = SCREEN_HEIGHT - gapSize - obstacles[i+1].rect.h;
+                        }
+                }
 
                 if (Bird.x > obstacles[i].rect.x + obstacles[i].rect.w && !obstacles[i].passed) {
                     score++;
@@ -117,10 +195,11 @@ int main(int argc, char* argv[]) {
                 }
             }
 
-            // Kiểm tra va chạm
-            int birdCenterX = Bird.x + 40; // Tâm hình tròn
+           //Kiểm tra va chạm
+
+            int birdCenterX = Bird.x + 45; // Tâm hình tròn
             int birdCenterY = Bird.y + 40;
-            int birdRadius = 40;
+            int birdRadius = 30;
             for (auto& obs : obstacles) {
                 if (checkCircleRectCollision(birdCenterX, birdCenterY, birdRadius, obs.rect)) {
                     // Chuyển sang trạng thái GAME_OVER khi va chạm
@@ -129,10 +208,12 @@ int main(int argc, char* argv[]) {
                         highScore = score;
                         saveHighScore(highScore);
                     }
+                    saveGlobalCoins(globalCoins);
                 }
             }
             if (score >= WINNING_SCORE) { // Thay 100 bằng WINNING_SCORE nếu dùng hằng số
                 gameState = GameState::WIN;
+                saveGlobalCoins(globalCoins);
             }
         }
 
@@ -141,6 +222,13 @@ int main(int argc, char* argv[]) {
         graphics.renderTexture(background.texture, background.scrollingOffset, 0);
         graphics.renderTexture(background.texture, background.scrollingOffset - background.width, 0);
 
+           //Vẽ coin
+            for (size_t i = 0; i < coinsVector.size(); i++)
+            {
+                if (!coinsVector[i].collected) {
+                     graphics.renderTexture(coinTexture, coinsVector[i].rect.x, coinsVector[i].rect.y);
+                }
+            }
         // Vẽ chướng ngại vật
         SDL_SetRenderDrawColor(graphics.renderer, 0, 255, 0, 255);
         for (size_t i = 0; i < obstacles.size(); i += 2) {
@@ -154,6 +242,13 @@ int main(int argc, char* argv[]) {
         string highScoreText = "High Score: " + to_string(highScore);
         graphics.renderText(highScoreText.c_str(), 20, 50, white, font);
 
+        // Draw current run coin
+        string currentRunCoin = "Coin:" + to_string(currentRunCoins);
+         graphics.renderText(currentRunCoin.c_str(),SCREEN_WIDTH - 110,20,white,font);
+
+        //ve total coin
+        std::string globalCoinText = "Total Coin:"+ to_string(globalCoins);
+         graphics.renderText(globalCoinText.c_str(),SCREEN_WIDTH - 200,50,white,font);
         // Vẽ thông báo GAME OVER
         if (gameState == GameState::GAME_OVER) {
             graphics.renderText("GAME OVER! PRESS SPACE TO RESTART", SCREEN_WIDTH / 2 - 250, SCREEN_HEIGHT / 2 - 20, white, font);
@@ -170,6 +265,7 @@ int main(int argc, char* argv[]) {
     SDL_DestroyTexture(pipeSouth);
     SDL_DestroyTexture(birdTexture);
     SDL_DestroyTexture(background.texture);
+    SDL_DestroyTexture(coinTexture);
     graphics.quit();
     return 0;
 }

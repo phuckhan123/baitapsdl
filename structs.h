@@ -61,5 +61,17 @@ struct Obstacle {
 
     void move(); // Khai báo
 };
+ struct Coin {
+    SDL_Rect rect;
+    bool collected = false;
+    int speed = 8;
+
+    void move() {
+        rect.x -= speed;
+    }
+};
+// Khai báo hàm renderCoinWithCount là hàm toàn cục
+void renderCoinWithCount(Graphics& graphics, SDL_Texture* coinIconTexture, int x, int y, int count, SDL_Color color, TTF_Font* font);
+
 
 #endif

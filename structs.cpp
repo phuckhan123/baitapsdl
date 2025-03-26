@@ -1,6 +1,7 @@
 #include "structs.h"
 #include <algorithm>
 #include "sdl_helper.h"
+#include<string>
 
 // Định nghĩa các hàm của struct Box
 void Box::updateBird() {
@@ -168,4 +169,15 @@ void Graphics::renderText(const char* text, int x, int y, SDL_Color color, TTF_F
 void Obstacle::move() {
     rect.x -= speed;  // Di chuyển sang trái
 
+}
+void renderCoinWithCount(Graphics& graphics, SDL_Texture* coinIconTexture, int x, int y, int count, SDL_Color color, TTF_Font* font) {
+    int coinIconWidth = 30;
+    int coinIconHeight = 30;
+    SDL_Rect coinIconRect = {x, y, coinIconWidth, coinIconHeight};
+    SDL_RenderCopy(graphics.renderer, coinIconTexture, NULL, &coinIconRect);
+
+    std::string coinText = std::to_string(count);
+    int coinTextX = x + coinIconWidth + 5;
+    int coinTextY = y;
+    graphics.renderText(coinText.c_str(), coinTextX, coinTextY, color, font);
 }

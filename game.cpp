@@ -2,11 +2,12 @@
 #include "constants.h"
 #include <cstdlib>
 
-void resetGame(Box& Bird, std::vector<Obstacle>& obstacles, int& score) {
+void resetGame(Box& Bird, std::vector<Obstacle>& obstacles, int& score,int &coins) {
     Bird.y = 50;
     Bird.velocity = 0;
     obstacles.clear();
     score = 0;
+    coins = 0;
     int lastX = SCREEN_WIDTH;
     for (int i = 0; i < 5; i++) {
         int height = 50 + rand() % 250;
