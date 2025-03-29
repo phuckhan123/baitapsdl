@@ -59,7 +59,7 @@ struct Graphics {
     Mix_Chunk* loadSound(const char* path);
     void play(Mix_Chunk* gChunk);
 };
-
+//
 struct Obstacle {
     SDL_Rect rect;
     int speed = 0;
