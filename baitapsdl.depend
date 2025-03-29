@@ -238,7 +238,7 @@
 1743270683 f:\baitapsdl\constants.h
 	<SDL.h>
 
-1743175094 source:f:\baitapsdl\main.cpp
+1743270638 source:f:\baitapsdl\main.cpp
 	<iostream>
 	<SDL.h>
 	<SDL_image.h>
@@ -273,7 +273,7 @@
 	<SDL_ttf.h>
 	"constants.h"
 
-1743245773 f:\baitapsdl\game.h
+1743270697 f:\baitapsdl\game.h
 	<SDL.h>
 	<vector>
 	"structs.h"
@@ -295,7 +295,7 @@
 	"constants.h"
 	<fstream>
 
-1743245788 source:f:\baitapsdl\game.cpp
+1743270710 source:f:\baitapsdl\game.cpp
 	"game.h"
 	"constants.h"
 	<cstdlib>
