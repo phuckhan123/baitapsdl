@@ -235,7 +235,7 @@
 1743172148 source:f:\baitapsdl\constants.cpp
 	"constants.h"
 
-1743172148 f:\baitapsdl\constants.h
+1743270683 f:\baitapsdl\constants.h
 	<SDL.h>
 
 1743175094 source:f:\baitapsdl\main.cpp
@@ -294,4 +294,10 @@
 	"utils.h"
 	"constants.h"
 	<fstream>
+
+1743245788 source:f:\baitapsdl\game.cpp
+	"game.h"
+	"constants.h"
+	<cstdlib>
+	<random>
 

@@ -10,5 +10,7 @@
 
 // Hàm render chướng ngại vật
 void renderObstacle(SDL_Renderer* renderer, SDL_Texture* pipeNorth, SDL_Texture* pipeSouth, SDL_Rect topRect, SDL_Rect bottomRect);
+// tao vật phẩm đầu game
+void genreatefirst(std::vector<Obstacle>& obstacles, int& score, std::vector<Coin>& coinsVector, std::vector<LifeUp>& lifeUps, std::uniform_int_distribution<>& coinPosition, std::uniform_int_distribution<>& lifePosition, std::mt19937& gen, int &currentRunCoins, int SCREEN_WIDTH, int SCREEN_HEIGHT);
 
 #endif

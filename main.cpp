@@ -15,7 +15,6 @@
 #include "game.h"
 #include "collision.h"
 using namespace std;
-
 int main(int argc, char* argv[]) {
     int score = 0;
     int highScore = loadHighScore();
@@ -24,6 +23,10 @@ int main(int argc, char* argv[]) {
     Box Bird;
     SDL_Texture* pipeNorth = graphics.loadTexture("pipeNorth.png");
     SDL_Texture* pipeSouth = graphics.loadTexture("pipeSouth.png");
+     // Load texture cho coin
+    SDL_Texture* coinTexture = graphics.loadTexture("coin.png");
+        // Load texture cho life
+    SDL_Texture* lifeTexture = graphics.loadTexture("life.png");
     TTF_Init();
     TTF_Font* font = TTF_OpenFont("Game Bubble.ttf", 28);
     SDL_Color white = { 255, 255, 255, 255 };
@@ -31,62 +34,25 @@ int main(int argc, char* argv[]) {
     SDL_Color yellow = { 255, 255, 0, 255 };
     srand(time(0)); // Khởi tạo seed cho random
     vector<Obstacle> obstacles;
-    const int numObstacles = 5; // Số lượng cột (cặp cột) ban đầu
-    const int minHeight = 50;
-    const int maxHeight = 300;
-    const int gapSize = 200;
-    const int distanceBetween = 300;
     vector<int> obstacleXPositions;
-    int lastX = SCREEN_WIDTH;
-
     // Khởi tạo random number generator
     std::random_device rd;
     std::mt19937 gen(rd());
     std::uniform_int_distribution<> heightVariation(-15, 15); // Điều chỉnh chiều cao từ -15 đến 15 (giảm phạm vi)
     int minBottomHeight = 50; // Chiều cao tối thiểu cho ống dưới
     std::uniform_int_distribution<> coinPosition(50, SCREEN_HEIGHT - 50);
-
-     // Load texture cho coin
-    SDL_Texture* coinTexture = graphics.loadTexture("coin.png");
     // Số coin hiện tại và total
     int currentRunCoins = 0;
     int globalCoins = loadGlobalCoins();
     int lives = 1;
     std::uniform_int_distribution<> lifeUpsPos(50, SCREEN_HEIGHT - 50);
-    // Load texture cho life
-    SDL_Texture* lifeTexture = graphics.loadTexture("life.png");
     // Tạo các life
     vector<LifeUp> lifeUps;
-    for(int i =0; i < 5; ++i)
-    {
-     LifeUp life;
-     life.rect.x = 1500 + i*3000;
-     life.rect.y = lifeUpsPos(gen);
-     life.rect.w = 30;
-     life.rect.h = 30;
-     lifeUps.push_back(life);
-}
-
     // Khởi tạo coin
     vector<Coin> coinsVector;
-    for (int i = 0; i < 10; i++)
-    {
-        Coin coin;
-        coin.rect.x = 1500 + i * 300;
-        coin.rect.y = coinPosition(gen);
-        coin.rect.w = 30;
-        coin.rect.h = 30;
-        coinsVector.push_back(coin);
-    }
     // Khởi tạo chướng ngại vật ban đầu
-    for (int i = 0; i < numObstacles; i++) {
-        int height = minHeight + rand() % (maxHeight - minHeight);
-        int xPosition = lastX + distanceBetween;
-        obstacles.push_back({ {xPosition, 0, 60, height} });
-        obstacles.push_back({ {xPosition, height + gapSize + (rand() % 100), 60, SCREEN_HEIGHT - (height + gapSize)} });
-        obstacleXPositions.push_back(xPosition);
-        lastX = xPosition;
-    }
+    int lastX = SCREEN_WIDTH;
+    genreatefirst(obstacles, score,coinsVector,lifeUps, coinPosition,lifeUpsPos,gen,currentRunCoins,SCREEN_WIDTH,SCREEN_HEIGHT);
     Sprite bird;
     SDL_Texture* birdTexture = graphics.loadTexture(BIRD_SPRITE_FILE);
     bird.init(birdTexture, BIRD_FRAMES, BIRD_CLIPS);
@@ -95,11 +61,9 @@ int main(int argc, char* argv[]) {
     bool quit = false;
     SDL_Event e;
     GameState gameState = GameState::PLAYING;
-
     // Tốc độ ban đầu và hiện tại của chướng ngại vật
     int obstacleBaseSpeed = 8;
     int currentObstacleSpeed = 0;
-
     //Tốc độ cuộn của background
     int backgroundBaseScrollSpeed = 8;
     int currentBackgroundScrollSpeed = 8;
@@ -120,16 +84,13 @@ int main(int argc, char* argv[]) {
                  }
             }
         }
-
         // Cập nhật game chỉ khi ở trạng thái PLAYING
         if (gameState == GameState::PLAYING) {
             bird.tick();
             currentObstacleSpeed = obstacleBaseSpeed + 1 * (score / 10);
             currentBackgroundScrollSpeed = backgroundBaseScrollSpeed + 1 * (score / 10);
             background.scroll(currentBackgroundScrollSpeed); // Cập nhật tốc độ cuộn
-
             Bird.updateBird();
-
             //Kiểm tra và tạo coin
             for (size_t i = 0; i < coinsVector.size(); i++) {
                 coinsVector[i].speed = currentObstacleSpeed;
@@ -144,7 +105,6 @@ int main(int argc, char* argv[]) {
                     coinsVector[i].collected = false;
                 }
             }
-
            //Kiểm tra va chạm coin
            for (size_t i = 0; i < coinsVector.size(); i++)
             {
@@ -157,7 +117,6 @@ int main(int argc, char* argv[]) {
                 }
             }
             //Kiểm tra và tạo life
-
         for (size_t i = 0; i < lifeUps.size(); i++) {
             lifeUps[i].speed = currentObstacleSpeed;
             lifeUps[i].move();
@@ -182,9 +141,6 @@ int main(int argc, char* argv[]) {
                   lifeUps[i].collected = true;
             }
         }
-
-
-
             // Di chuyển và tái tạo chướng ngại vật
             for (size_t i = 0; i < obstacles.size(); i += 2) {
                 obstacles[i].speed = currentObstacleSpeed;
@@ -192,13 +148,11 @@ int main(int argc, char* argv[]) {
                 obstacles[i].move();
                 obstacles[i + 1].move();
                 //Thay đổi chiều cao của chướng ngại vật
-                if ( (score>=30 and score<= 40) or ( score >=  70 and score <= 80 )) {
+                if ( (score>=30 and score<= 40) or ( score >=  70 and score <= 80 ) or ( score>= 110 and score <= 120)) {
                    int variation = heightVariation(gen); // Lấy giá trị ngẫu nhiên
-
                         // Thay đổi chiều cao của cả hai ống sao cho tổng chiều cao không đổi
                          obstacles[i].rect.h += variation;
                         obstacles[i + 1].rect.h -= variation;
-
                         //Giữ cố định phần dưới
                         obstacles[i+1].rect.y = obstacles[i].rect.h + gapSize;
                         // Giới hạn chiều cao của ống trên và ống dưới
@@ -217,7 +171,6 @@ int main(int argc, char* argv[]) {
                             obstacles[i].rect.h = SCREEN_HEIGHT - gapSize - obstacles[i+1].rect.h;
                         }
                 }
-
                 if (Bird.x > obstacles[i].rect.x + obstacles[i].rect.w && !obstacles[i].passed) {
                     score++;
                     obstacles[i].passed = true;
@@ -226,8 +179,9 @@ int main(int argc, char* argv[]) {
                     int newX;
                     newX = 1500;
                     int newHeight = minHeight + rand() % (maxHeight - minHeight);
+                    int temp =  newHeight + gapSize + (rand() % 100);
                     obstacles[i].rect = { newX, 0, 60, newHeight };
-                    obstacles[i + 1].rect = { newX, newHeight + gapSize + (rand() % 100), 60, SCREEN_HEIGHT - (newHeight + gapSize) };
+                    obstacles[i + 1].rect = { newX, temp, 60, SCREEN_HEIGHT - (temp) };
                     obstacleXPositions.push_back(newX);
                     if (obstacleXPositions.size() > numObstacles) {
                         obstacleXPositions.erase(obstacleXPositions.begin());
@@ -236,19 +190,16 @@ int main(int argc, char* argv[]) {
                     obstacles[i].passed = false;
                 }
             }
-
            //Kiểm tra va chạm
-
             int birdCenterX = Bird.x + 45; // Tâm hình tròn
-            int birdCenterY = Bird.y + 40;
+            int birdCenterY = Bird.y + 50;
             int birdRadius = 30;
         for (auto& obs : obstacles) {
             if (checkCircleRectCollision(birdCenterX, birdCenterY, birdRadius, obs.rect)) {
                  if(lives>1)
                   {
                      lives-=1;
-                        Bird.y = 50;
-                        Bird.velocity = 0;
+
                         int lastX = SCREEN_WIDTH;
          for (size_t i = 0; i < obstacles.size(); i += 2) {
         int newHeight = minHeight + rand() % (maxHeight - minHeight); // Tạo chiều cao ngẫu nhiên
@@ -284,7 +235,6 @@ int main(int argc, char* argv[]) {
         graphics.prepareScene();
         graphics.renderTexture(background.texture, background.scrollingOffset, 0);
         graphics.renderTexture(background.texture, background.scrollingOffset - background.width, 0);
-
            //Vẽ coin
             for (size_t i = 0; i < coinsVector.size(); i++)
             {
@@ -305,13 +255,11 @@ int main(int argc, char* argv[]) {
             renderObstacle(graphics.renderer, pipeNorth, pipeSouth, obstacles[i].rect, obstacles[i + 1].rect);
         }
         graphics.render(Bird.x, Bird.y, bird, Bird.angle);
-
         // Vẽ UI
     std::string scoreText = "Score: " + std::to_string(score);
     graphics.renderText(scoreText.c_str(), 20, 20, white, font);
     string highScoreText = "High Score: " + to_string(highScore);
     graphics.renderText(highScoreText.c_str(), 20, 50, white, font);
-
     // Draw current run coin
     string currentRunCoin = ":" + to_string(currentRunCoins);
      graphics.renderText(currentRunCoin.c_str(),SCREEN_WIDTH - 50,20,yellow,font);
@@ -332,7 +280,6 @@ int main(int argc, char* argv[]) {
         graphics.presentScene();
         SDL_Delay(50);
     }
-
     SDL_DestroyTexture(pipeNorth);
     SDL_DestroyTexture(pipeSouth);
     SDL_DestroyTexture(birdTexture);

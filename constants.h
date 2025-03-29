@@ -12,6 +12,12 @@
  extern const int SCREEN_HEIGHT;
  extern const char* WINDOW_TITLE;
  extern const int WINNING_SCORE;
+ const int numObstacles = 5; // Số lượng cột (cặp cột) ban đầu
+    const int minHeight = 50;
+    const int maxHeight = 300;
+    const int gapSize = 200;
+    const int distanceBetween = 300;
+
 
  // Enum cho trạng thái game
  enum class GameState {
