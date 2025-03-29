@@ -20,6 +20,10 @@ int main(int argc, char* argv[]) {
     int highScore = loadHighScore();
     Graphics graphics;
     graphics.init();
+
+    Mix_Music* menuMusic = graphics.loadMusic("menu_music.wav");
+    Mix_Chunk* clickSound = graphics.loadSound("click.wav");
+
     Box Bird;
     SDL_Texture* pipeNorth = graphics.loadTexture("pipeNorth.png");
     SDL_Texture* pipeSouth = graphics.loadTexture("pipeSouth.png");
@@ -73,6 +77,7 @@ int main(int argc, char* argv[]) {
 
             // Xử lý sự kiện nhấn phím
             if (e.type == SDL_KEYDOWN) {
+                graphics.play(clickSound);
                 // Nhảy khi đang chơi
                 if ((e.key.keysym.sym == SDLK_UP || e.key.keysym.sym == SDLK_SPACE) && gameState == GameState::PLAYING) {
                     Bird.velocity = Bird.jumpPower;
@@ -84,6 +89,7 @@ int main(int argc, char* argv[]) {
                  }
             }
         }
+        graphics.play(menuMusic);
         // Cập nhật game chỉ khi ở trạng thái PLAYING
         if (gameState == GameState::PLAYING) {
             bird.tick();

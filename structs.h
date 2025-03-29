@@ -6,6 +6,7 @@
 #include <vector>
 #include <cmath>
 #include <SDL_ttf.h>
+#include <SDL_mixer.h>
 #include "constants.h"
 
 struct Box {
@@ -53,6 +54,10 @@ struct Graphics {
     void render(int x, int y, const Sprite& sprite, double angle); // Khai báo
     void renderText(const char* text, int x, int y, SDL_Color color, TTF_Font* font); // Khai báo
     void renderLife(SDL_Texture* lifeTexture, int x, int y, int width, int height);
+    Mix_Music *loadMusic(const char* path);
+    void play(Mix_Music *gMusic);
+    Mix_Chunk* loadSound(const char* path);
+    void play(Mix_Chunk* gChunk);
 };
 
 struct Obstacle {
