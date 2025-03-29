@@ -3,7 +3,7 @@
 #include <cstdlib>
 #include<random>
 
-void resetGame(Box& Bird, std::vector<Obstacle>& obstacles, int& score, std::vector<Coin>& coinsVector, std::vector<LifeUp>& lifeUps, std::uniform_int_distribution<>& coinPosition, std::uniform_int_distribution<>& lifePosition, std::mt19937& gen, int currentRunCoins, int SCREEN_WIDTH, int SCREEN_HEIGHT)
+void resetGame(Box& Bird, std::vector<Obstacle>& obstacles, int& score, std::vector<Coin>& coinsVector, std::vector<LifeUp>& lifeUps, std::uniform_int_distribution<>& coinPosition, std::uniform_int_distribution<>& lifePosition, std::mt19937& gen, int &currentRunCoins, int SCREEN_WIDTH, int SCREEN_HEIGHT)
 {
 Bird.y = 50;
 Bird.velocity = 0;
@@ -12,16 +12,25 @@ lifeUps.clear();
 coinsVector.clear();
 score = 0;
 currentRunCoins = 0;
-for (Coin &coin : coinsVector) {
-coin.collected = false;
-coin.rect.x = 1500+ (rand() % 10)*300;
-coin.rect.y = coinPosition(gen);
+    for(int i =0; i < 5; ++i)
+    {
+     LifeUp life;
+     life.rect.x = 1500 + i*3000;
+     life.rect.y = lifePosition(gen);
+     life.rect.w = 30;
+     life.rect.h = 30;
+     lifeUps.push_back(life);
 }
-for (LifeUp &life : lifeUps) {
-life.collected = false;
-life.rect.x = 1500+ (rand() % 10)*300 + 400;
-life.rect.y = lifePosition(gen);
-}
+
+    for (int i = 0; i < 10; i++)
+    {
+        Coin coin;
+        coin.rect.x = 1500 + i * 300;
+        coin.rect.y = coinPosition(gen);
+        coin.rect.w = 30;
+        coin.rect.h = 30;
+        coinsVector.push_back(coin);
+    }
 int lastX = SCREEN_WIDTH;
 for (int i = 0; i < 5; i++) {
 int height = 50 + rand() % 250;
