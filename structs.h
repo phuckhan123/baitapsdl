@@ -52,6 +52,7 @@ struct Graphics {
     void quit();                                               // Khai báo
     void render(int x, int y, const Sprite& sprite, double angle); // Khai báo
     void renderText(const char* text, int x, int y, SDL_Color color, TTF_Font* font); // Khai báo
+    void renderLife(SDL_Texture* lifeTexture, int x, int y, int width, int height);
 };
 
 struct Obstacle {
@@ -69,6 +70,15 @@ struct Obstacle {
     void move() {
         rect.x -= speed;
     }
+};
+struct LifeUp {
+SDL_Rect rect;
+bool collected = false;
+int speed = 8;
+
+void move() {
+    rect.x -= speed;
+}
 };
 // Khai báo hàm renderCoinWithCount là hàm toàn cục
 void renderCoinWithCount(Graphics& graphics, SDL_Texture* coinIconTexture, int x, int y, int count, SDL_Color color, TTF_Font* font);

@@ -164,6 +164,14 @@ void Graphics::renderText(const char* text, int x, int y, SDL_Color color, TTF_F
     SDL_FreeSurface(surface);
     SDL_DestroyTexture(texture);
 }
+void Graphics::renderLife(SDL_Texture* lifeTexture, int x, int y, int width, int height) {
+SDL_Rect dest;
+dest.x = x;
+dest.y = y;
+dest.w = width;
+dest.h = height;
+SDL_RenderCopy(renderer, lifeTexture, NULL, &dest);
+}
 
 // Định nghĩa các hàm của struct Obstacle
 void Obstacle::move() {
