@@ -302,3 +302,80 @@
 	<cstdlib>
 	<random>
 
+1743316040 source:g:\game\baitapsdl\collision.cpp
+	"collision.h"
+	<algorithm>
+
+1743316040 g:\game\baitapsdl\collision.h
+	<SDL.h>
+
+1743316040 source:g:\game\baitapsdl\constants.cpp
+	"constants.h"
+
+1743316040 g:\game\baitapsdl\constants.h
+	<SDL.h>
+
+1743316040 source:g:\game\baitapsdl\game.cpp
+	"game.h"
+	"constants.h"
+	<cstdlib>
+	<random>
+
+1743316040 g:\game\baitapsdl\game.h
+	<SDL.h>
+	<vector>
+	"structs.h"
+	<random>
+
+1743316041 g:\game\baitapsdl\structs.h
+	<SDL.h>
+	<SDL_image.h>
+	<vector>
+	<cmath>
+	<SDL_ttf.h>
+	<SDL_mixer.h>
+	"constants.h"
+
+1743316040 source:g:\game\baitapsdl\main.cpp
+	<iostream>
+	<SDL.h>
+	<SDL_image.h>
+	<vector>
+	<cstdlib>
+	<ctime>
+	<algorithm>
+	<cmath>
+	<SDL_ttf.h>
+	<random>
+	"constants.h"
+	"utils.h"
+	"sdl_helper.h"
+	"structs.h"
+	"game.h"
+	"collision.h"
+
+1743316041 g:\game\baitapsdl\utils.h
+	<iostream>
+	<fstream>
+	<SDL.h>
+
+1743316041 g:\game\baitapsdl\sdl_helper.h
+	<SDL.h>
+	<SDL_image.h>
+
+1743316041 source:g:\game\baitapsdl\sdl_helper.cpp
+	"sdl_helper.h"
+	"constants.h"
+	"utils.h"
+
+1743316041 source:g:\game\baitapsdl\structs.cpp
+	"structs.h"
+	<algorithm>
+	"sdl_helper.h"
+	<string>
+
+1743316041 source:g:\game\baitapsdl\utils.cpp
+	"utils.h"
+	"constants.h"
+	<fstream>
+
