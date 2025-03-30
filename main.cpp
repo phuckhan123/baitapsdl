@@ -21,8 +21,8 @@ int main(int argc, char* argv[]) {
     Graphics graphics;
     graphics.init();
 
-    Mix_Music* menuMusic = graphics.loadMusic("menu_music_.wav");
-    Mix_Chunk* clickSound = graphics.loadSound("click_.wav");
+    Mix_Music* menuMusic = graphics.loadMusic("menu_music.wav");
+    Mix_Chunk* clickSound = graphics.loadSound("click.wav");
 
     Box Bird;
     SDL_Texture* pipeNorth = graphics.loadTexture("pipeNorth.png");
